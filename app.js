@@ -1,3 +1,20 @@
+
+$(document).ready( function() {
+	$('.unanswered-getter').submit( function(){
+		// zero out results if previous search has run
+		$('.results').html('');
+		// get the value of the tags the user submitted
+		var tags = $(this).find("input[name='tags']").val();
+		getUnanswered(tags);
+	});
+
+	$('.inspiration-getter').submit( function(){	
+		$('.results').html('');
+		var tags = $(this).find("input[name='tags']").val();
+		getAnswered(tags)
+	});
+
+
 // this function takes the question object returned by StackOverflow 
 // and returns new result to be appended to DOM
 var showQuestion = function(question) {
@@ -79,13 +96,35 @@ var getUnanswered = function(tags) {
 		});
 };
 
+var getAnswered = function(tags) {
 
-$(document).ready( function() {
-	$('.unanswered-getter').submit( function(){
-		// zero out results if previous search has run
-		$('.results').html('');
-		// get the value of the tags the user submitted
-		var tags = $(this).find("input[name='tags']").val();
-		getUnanswered(tags);
-	});
+	var request = { tagged: tags,
+					site: 'stackoverflow',
+					period: 'all_time'};
+
+	$.ajax({
+		url: "http://api.stackexchange.com/2.2/top-answers",
+		data: request,
+		dataType: "jsonp",
+		type: "GET",
+		})
+		.done(function(result){
+			var searchResults = showSearchResults(request.tagged, result.items.length);
+			
+			$('.search-results').html(searchResults);
+
+			$.each(result.items, function(i, item) {
+				var question = showQuestion(item);
+				$('.search-results').append(question);
+			});
+		})
+		.fail(function(jqXHR, error){
+			var errorElem = showError(error);
+			$('.search-results').append(errorElem);
+		});
+};
+
+
 });
+
+
