@@ -10,8 +10,8 @@ $(document).ready( function() {
 
 	$('.inspiration-getter').submit( function(){	
 		$('.results').html('');
-		var tags = $(this).find("input[name='tags']").val();
-		getAnswered(tags)
+		var tags = $(this).find("input[name='answerers']").val();
+		getAnswered(tags);
 	});
 
 
@@ -96,20 +96,21 @@ var getUnanswered = function(tags) {
 		});
 };
 
+
 var getAnswered = function(tags) {
 
-	var request = { tagged: tags,
+	var request = { tag: tags,
 					site: 'stackoverflow',
 					period: 'all_time'};
 
 	$.ajax({
-		url: "http://api.stackexchange.com/2.2/top-answers",
+		url: "http://api.stackexchange.com/2.2/tags/" + request.tag + "/top-answerers/"+ request.period,
 		data: request,
 		dataType: "jsonp",
 		type: "GET",
 		})
 		.done(function(result){
-			var searchResults = showSearchResults(request.tagged, result.items.length);
+			var searchResults = showSearchResults(request.tag, result.items.length);
 			
 			$('.search-results').html(searchResults);
 
@@ -125,6 +126,53 @@ var getAnswered = function(tags) {
 };
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 });
-
-
