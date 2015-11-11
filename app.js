@@ -10,8 +10,8 @@ $(document).ready( function() {
 
 	$('.inspiration-getter').submit( function(){	
 		$('.results').html('');
-		var tags = $(this).find("input[name='answerers']").val();
-		getAnswered(tags);
+		var answerers = $(this).find("input[name='answerers']").val();
+		getAnswered(answerers);
 	});
 
 
@@ -100,39 +100,38 @@ var getUnanswered = function(tags) {
 
 // this function takes the question object returned by StackOverflow 
 // and returns new result to be appended to DOM
-var showAnswer = function(answer) {
+var showAnswer = function(answerers) {
 	
 	// clone our result template code
 	var result = $('.templates .answer').clone();
 	
 	// Set the  answer properties in result
-	var answerElem = result.find('.display-name a');
-	answerElem.attr('href', answer.link);
-	answerElem.text(answer.link);
+	var answerElem = result.find('.user-name a');
+	answerElem.attr('href', answerers.user.link);
+	answerElem.text(answerers.user.link);
 
 	// Set the display name properties in result
-	var awsome_person = result.find('.name');
-	awsome_person.text(answer.display_name);
-
-
+	var name = result.find('.name');
+	name.text(answerers.user.display_name);
 
 	// set the reputaion property in result
+	var reputation= result.find('.user_rep').text(answerers.user.reputation);
 	var rep = result.find('.user_rep');
-	user_rep.text(answer.user.reputation);
+	rep.text(answerers.user.reputation);
 
 	// set the score property in result
 	var viewed = result.find('.viewed');
-	viewed.text(answer.score);
+	viewed.text(answerers.score);
 
 	return result;
 };
 
 
 // takes the srting passed through the the search top answers funtion
-var getAnswered = function(tags) {
+var getAnswered = function(tag) {
 
 // parameters that are passed to Stackoverflow API
-	var request = { tag: tags,
+	var request = { tag: tag,
 					site: 'stackoverflow',
 					period: 'all_time'};
 
@@ -149,7 +148,7 @@ var getAnswered = function(tags) {
 
 			$.each(result.items, function(i, item) {
 				var answer = showAnswer(item);
-				$('.search-results').append(question);
+				$('.search-results').append(answer);
 			});
 		})
 		.fail(function(jqXHR, error){
