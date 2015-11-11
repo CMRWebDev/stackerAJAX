@@ -120,7 +120,7 @@ var showAnswer = function(answerers) {
 	rep.text(answerers.user.reputation);
 
 	// set the score property in result
-	var viewed = result.find('.viewed');
+	var viewed = result.find('.score');
 	viewed.text(answerers.score);
 
 	return result;
