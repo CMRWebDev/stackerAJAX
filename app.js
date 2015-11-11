@@ -50,6 +50,7 @@ var showQuestion = function(question) {
 };
 
 
+
 // this function takes the results object from StackOverflow
 // and returns the number of results and tags to be appended to DOM
 var showSearchResults = function(query, resultNum) {
@@ -97,8 +98,40 @@ var getUnanswered = function(tags) {
 };
 
 
+// this function takes the question object returned by StackOverflow 
+// and returns new result to be appended to DOM
+var showAnswer = function(answer) {
+	
+	// clone our result template code
+	var result = $('.templates .answer').clone();
+	
+	// Set the  answer properties in result
+	var answerElem = result.find('.display-name a');
+	answerElem.attr('href', answer.link);
+	answerElem.text(answer.link);
+
+	// Set the display name properties in result
+	var awsome_person = result.find('.name');
+	awsome_person.text(answer.display_name);
+
+
+
+	// set the reputaion property in result
+	var rep = result.find('.user_rep');
+	user_rep.text(answer.user.reputation);
+
+	// set the score property in result
+	var viewed = result.find('.viewed');
+	viewed.text(answer.score);
+
+	return result;
+};
+
+
+// takes the srting passed through the the search top answers funtion
 var getAnswered = function(tags) {
 
+// parameters that are passed to Stackoverflow API
 	var request = { tag: tags,
 					site: 'stackoverflow',
 					period: 'all_time'};
@@ -115,7 +148,7 @@ var getAnswered = function(tags) {
 			$('.search-results').html(searchResults);
 
 			$.each(result.items, function(i, item) {
-				var question = showQuestion(item);
+				var answer = showAnswer(item);
 				$('.search-results').append(question);
 			});
 		})
